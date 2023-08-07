@@ -1,66 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import style from './contactform.module.scss'
-export default class Contactform extends React.Component {
-  state = {
-    name: '',
-    number: '',
+import style from './contactform.module.scss';
+const Contactform = ({onAddContact}) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChange = event => {
+    // console.log(event.target.name);
+    const { name, value } = event.target;
+    switch (name) {
+      case 'number':
+        setNumber(value);
+        break;
+      case 'name':
+        setName(value);
+        break;
+
+      default:
+        alert('Please enter number');
+        return;
+    }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
-
-  onSubmitForm = event => {
-
+  const onSubmitForm = event => {
     event.preventDefault();
 
-    if (this.state.number === '') {
-      return alert('Please enter number');
-    
-    }
-    this.props.onAddContact(this.state);
-    this.setState({
-      name: '',
-      number: '',
-    });
-  }
-  render() {
-    return (
-      <>
-        <form className={style.formContainer} onSubmit={this.onSubmitForm}>
-        <label className={style.labName} htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            className={style.inpName}
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            id="name"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-          
-          <label className={style.labNumber} htmlFor="number">Number</label>
-          <input
-            type="tel"
-            name="number"
-            placeholder="Number"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            className={style.inpNumber}
-            id="number"
-            value={this.state.number}
-            onChange={this.handleChange}
-          />
-          
+    // if (number === '') {
+    //   alert('Please enter number');
+    //   return ;
 
-          <button type="submit" className={style.btnSubmit}>add contact</button>
-        </form>
-      </>
-    );
-  }
-}
+    // }
+    onAddContact({name, number});
+    setName('');
+    setNumber('');
+
+
+    // this.props.onAddContact(name, number);
+  };
+
+  return (
+    <>
+      <form className={style.formContainer} onSubmit={onSubmitForm}>
+        <label className={style.labName} htmlFor="name">
+          Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          className={style.inpName}
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          id="name"
+          value={name}
+          onChange={handleChange}
+        />
+
+        <label className={style.labNumber} htmlFor="number">
+          Number
+        </label>
+        <input
+          type="tel"
+          name="number"
+          placeholder="Number"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          className={style.inpNumber}
+          id="number"
+          value={number}
+          onChange={handleChange}
+        />
+
+        <button type="submit" className={style.btnSubmit}>
+          add contact
+        </button>
+      </form>
+    </>
+  );
+};
+export default Contactform;
 
 Contactform.propTypes = {
   onAddContact: PropTypes.func.isRequired,
